@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+function main
+(
+    command -v compiledb >/dev/null || pip install compiledb
+    command -v compdb >/dev/null || pip install compdb
+
+    local -r cwd=$(pwd)
+
+    while :; do
+        if [[ -f Makefile ]]; then
+            echo cdb: using "\`$(realpath --relative-to="${cwd}" Makefile)'"
+            make -Bnw "$@" | compiledb
+            compdb -p . list > compile_commands.json.tmp
+            mv compile_commands.json.tmp compile_commands.json
+            exit
+        fi
+        [[ "$(pwd)" != @("${HOME}"|"/") ]] || break
+        cd ..
+    done
+    echo cwd: Error: Makefile not found >&2
+)
+
+main "$@"
