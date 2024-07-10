@@ -274,3 +274,6 @@ function switchmake()
 #    && [[ ! $(pgrep -f 'zellij attach') ]] &&\
 #  exec zellij attach -c J
 eval "$(zellij setup --generate-auto-start zsh)"
+
+#nix-shell -p dust -> dispplay a subshell with the package targeted
+#https://search.nixos.org/packages dock to find if package exit.
